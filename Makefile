@@ -8,4 +8,10 @@ sqlc:
 	find db/sqlc -type f ! -name '*_test.go' -delete
 	sqlc generate
 
-.PHONY: migrate-up migrate-down sqlc
+test:
+	go test -v -cover ./...
+
+clean-test-cache:
+	go clean -testcache
+
+.PHONY: migrate-up migrate-down sqlc test clean-test-cache
