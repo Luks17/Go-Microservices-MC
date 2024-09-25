@@ -6,6 +6,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v7"
 	_ "github.com/lib/pq"
 )
 
@@ -25,4 +26,10 @@ func TestMain(m *testing.M) {
 	testQueries = New(conn)
 
 	os.Exit(m.Run())
+}
+
+func RandomCurrency() Currencies {
+	currencies := []Currencies{CurrenciesUSD, CurrenciesEUR, CurrenciesBRL}
+
+	return currencies[gofakeit.Number(0, len(currencies)-1)]
 }

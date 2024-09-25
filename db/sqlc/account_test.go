@@ -2,16 +2,18 @@ package db
 
 import (
 	"context"
+	"strconv"
 	"testing"
 
+	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateAccount(t *testing.T) {
 	arg := CreateAccountParams{
-		Owner:    "Nestor",
-		Balance:  "100.50",
-		Currency: CurrenciesUSD,
+		Owner:    gofakeit.Name(),
+		Balance:  strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64),
+		Currency: RandomCurrency(),
 	}
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)

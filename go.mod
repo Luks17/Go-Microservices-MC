@@ -4,6 +4,8 @@ go 1.23.1
 
 require github.com/lib/pq v1.10.9
 
+require github.com/brianvoe/gofakeit/v7 v7.0.4
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
