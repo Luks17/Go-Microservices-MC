@@ -1,4 +1,4 @@
-package db
+package sqlc_test
 
 import (
 	"database/sql"
@@ -6,8 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/brianvoe/gofakeit/v7"
-	_ "github.com/lib/pq"
+	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 )
 
 const (
@@ -15,7 +14,7 @@ const (
 	dbSource = "postgresql://root:123456@0.0.0.0:5432/bank?sslmode=disable"
 )
 
-var testQueries *Queries
+var testQueries *sqlc.Queries
 
 func TestMain(m *testing.M) {
 	conn, err := sql.Open(dbDriver, dbSource)
@@ -23,13 +22,7 @@ func TestMain(m *testing.M) {
 		log.Fatal("Cannot connect to db: ", err)
 	}
 
-	testQueries = New(conn)
+	testQueries = sqlc.New(conn)
 
 	os.Exit(m.Run())
-}
-
-func RandomCurrency() Currencies {
-	currencies := []Currencies{CurrenciesUSD, CurrenciesEUR, CurrenciesBRL}
-
-	return currencies[gofakeit.Number(0, len(currencies)-1)]
 }

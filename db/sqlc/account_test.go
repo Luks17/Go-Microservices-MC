@@ -1,4 +1,4 @@
-package db
+package sqlc_test
 
 import (
 	"context"
@@ -7,15 +7,17 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Luks17/Go-Microservices-MC/db/devutils"
+	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 )
 
-func randomNewAccount() CreateAccountParams {
-	return CreateAccountParams{
+func randomNewAccount() sqlc.CreateAccountParams {
+	return sqlc.CreateAccountParams{
 		Owner:    gofakeit.Name(),
 		Balance:  strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64),
-		Currency: RandomCurrency(),
+		Currency: devutils.RandomCurrency(),
 	}
 }
 
@@ -63,7 +65,7 @@ func TestUpdateAccount(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, createdAccount)
 
-	updateArg := UpdateAccountParams{
+	updateArg := sqlc.UpdateAccountParams{
 		ID:      createdAccount.ID,
 		Balance: strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64),
 	}
@@ -108,7 +110,7 @@ func TestListAccounts(t *testing.T) {
 		require.NotEmpty(t, createdAccount)
 	}
 
-	arg := ListAccountsParams{
+	arg := sqlc.ListAccountsParams{
 		Limit:  5,
 		Offset: 5,
 	}
