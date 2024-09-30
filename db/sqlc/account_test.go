@@ -13,16 +13,8 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func randomNewAccount() sqlc.CreateAccountParams {
-	return sqlc.CreateAccountParams{
-		Owner:    gofakeit.Name(),
-		Balance:  strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64),
-		Currency: devutils.RandomCurrency(),
-	}
-}
-
 func TestCreateAccount(t *testing.T) {
-	arg := randomNewAccount()
+	arg := devutils.RandomNewAccount()
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
 
@@ -38,7 +30,7 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-	arg := randomNewAccount()
+	arg := devutils.RandomNewAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), arg)
 
@@ -58,7 +50,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestUpdateAccount(t *testing.T) {
-	createArg := randomNewAccount()
+	createArg := devutils.RandomNewAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -83,7 +75,7 @@ func TestUpdateAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	createArg := randomNewAccount()
+	createArg := devutils.RandomNewAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -102,7 +94,7 @@ func TestDeleteAccount(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createArg := randomNewAccount()
+		createArg := devutils.RandomNewAccount()
 
 		createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
