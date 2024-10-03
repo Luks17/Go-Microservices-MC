@@ -2,7 +2,6 @@ package tx
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 )
@@ -50,42 +49,17 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		amountF, err := strconv.ParseFloat(arg.Amount, 64)
-		if err != nil {
-			return err
-		}
-
-		account1, err := q.GetAccountForUpdate(ctx, arg.FromAccountID)
-		if err != nil {
-			return err
-		}
-
-		balance1F, err := strconv.ParseFloat(account1.Balance, 64)
-		if err != nil {
-			return err
-		}
-
-		updatedAccount1, err := q.UpdateAccount(ctx, sqlc.UpdateAccountParams{
-			ID:      account1.ID,
-			Balance: strconv.FormatFloat(balance1F-amountF, 'f', 2, 64),
+		updatedAccount1, err := q.AddAccountBalance(ctx, sqlc.AddAccountBalanceParams{
+			Amount: "-" + arg.Amount,
+			ID:     arg.FromAccountID,
 		})
 		if err != nil {
 			return err
 		}
 
-		account2, err := q.GetAccountForUpdate(ctx, arg.ToAccountID)
-		if err != nil {
-			return err
-		}
-
-		balance2F, err := strconv.ParseFloat(account2.Balance, 64)
-		if err != nil {
-			return err
-		}
-
-		updatedAccount2, err := q.UpdateAccount(ctx, sqlc.UpdateAccountParams{
-			ID:      account2.ID,
-			Balance: strconv.FormatFloat(balance2F+amountF, 'f', 2, 64),
+		updatedAccount2, err := q.AddAccountBalance(ctx, sqlc.AddAccountBalanceParams{
+			Amount: arg.Amount,
+			ID:     arg.ToAccountID,
 		})
 		if err != nil {
 			return err

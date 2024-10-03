@@ -118,6 +118,7 @@ func TestTransferTx(t *testing.T) {
 		require.True(t, balanceDiffAccount1 > 0)
 	}
 
+	// get updated accounts
 	updatedAccount1, err := store.GetAccount(context.Background(), createdAccount1.ID)
 	require.NoError(t, err)
 	updatedAccount2, err := store.GetAccount(context.Background(), createdAccount2.ID)
@@ -131,6 +132,7 @@ func TestTransferTx(t *testing.T) {
 	newBalance2, err := strconv.ParseFloat(updatedAccount2.Balance, 64)
 	require.NoError(t, err)
 
+	// verify final balances
 	require.Equal(t, oldBalance1-float64(n)*amountF, newBalance1)
 	require.Equal(t, oldBalance2+float64(n)*amountF, newBalance2)
 }
