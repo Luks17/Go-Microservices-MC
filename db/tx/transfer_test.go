@@ -2,6 +2,7 @@ package tx_test
 
 import (
 	"context"
+	"strconv"
 	"testing"
 
 	"github.com/Luks17/Go-Microservices-MC/db/devutils"
@@ -24,6 +25,11 @@ func TestTransferTx(t *testing.T) {
 
 	require.NoError(t, err)
 	require.NotEmpty(t, createdAccount2)
+
+	oldBalance1, err := strconv.ParseFloat(createdAccount1.Balance, 64)
+	require.NoError(t, err)
+	oldBalance2, err := strconv.ParseFloat(createdAccount2.Balance, 64)
+	require.NoError(t, err)
 
 	// number of transfers
 	n := 5
@@ -61,8 +67,6 @@ func TestTransferTx(t *testing.T) {
 
 		transfer, err := store.GetTransfer(context.Background(), result.Transfer.ID)
 		require.NoError(t, err)
-		require.NotEmpty(t, transfer)
-
 		require.Equal(t, createdAccount1.ID, transfer.FromAccountID)
 		require.Equal(t, createdAccount2.ID, transfer.ToAccountID)
 		require.Equal(t, amount, transfer.Amount)
@@ -75,7 +79,6 @@ func TestTransferTx(t *testing.T) {
 
 		fromEntry, err := store.GetEntry(context.Background(), result.FromEntry.ID)
 		require.NoError(t, err)
-		require.NotEmpty(t, fromEntry)
 		require.Equal(t, createdAccount1.ID, fromEntry.AccountID)
 		require.Equal(t, "-"+amount, fromEntry.Amount)
 		require.NotZero(t, fromEntry.ID)
@@ -87,10 +90,47 @@ func TestTransferTx(t *testing.T) {
 
 		toEntry, err := store.GetEntry(context.Background(), result.ToEntry.ID)
 		require.NoError(t, err)
-		require.NotEmpty(t, toEntry)
 		require.Equal(t, createdAccount2.ID, toEntry.AccountID)
 		require.Equal(t, amount, toEntry.Amount)
 		require.NotZero(t, toEntry.ID)
 		require.NotZero(t, toEntry.CreatedAt)
+
+		// check fromAccount Params
+		require.NotEmpty(t, result.FromAccount)
+		require.NotZero(t, result.ToAccount.ID)
+		require.Equal(t, createdAccount1.ID, result.FromAccount.ID)
+
+		// check toAccount Params
+		require.NotEmpty(t, result.ToAccount)
+		require.NotZero(t, result.ToAccount.ID)
+		require.Equal(t, createdAccount2.ID, result.ToAccount.ID)
+
+		// check balances
+		newBalance1, err := strconv.ParseFloat(result.FromAccount.Balance, 64)
+		require.NoError(t, err)
+		newBalance2, err := strconv.ParseFloat(result.ToAccount.Balance, 64)
+		require.NoError(t, err)
+
+		balanceDiffAccount1 := oldBalance1 - newBalance1
+		balanceDiffAccount2 := newBalance2 - oldBalance2
+
+		require.Equal(t, balanceDiffAccount1, balanceDiffAccount2)
+		require.True(t, balanceDiffAccount1 > 0)
 	}
+
+	updatedAccount1, err := store.GetAccount(context.Background(), createdAccount1.ID)
+	require.NoError(t, err)
+	updatedAccount2, err := store.GetAccount(context.Background(), createdAccount2.ID)
+	require.NoError(t, err)
+
+	amountF, err := strconv.ParseFloat(amount, 64)
+	require.NoError(t, err)
+
+	newBalance1, err := strconv.ParseFloat(updatedAccount1.Balance, 64)
+	require.NoError(t, err)
+	newBalance2, err := strconv.ParseFloat(updatedAccount2.Balance, 64)
+	require.NoError(t, err)
+
+	require.Equal(t, oldBalance1-float64(n)*amountF, newBalance1)
+	require.Equal(t, oldBalance2+float64(n)*amountF, newBalance2)
 }
