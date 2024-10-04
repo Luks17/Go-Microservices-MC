@@ -24,7 +24,9 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 	var result TransferTxResult
 
 	err := store.execTx(ctx, func(q *sqlc.Queries) error {
-		transfer, err := q.CreateTransfer(ctx, sqlc.CreateTransferParams{
+		var err error
+
+		result.Transfer, err = q.CreateTransfer(ctx, sqlc.CreateTransferParams{
 			FromAccountID: arg.FromAccountID,
 			ToAccountID:   arg.ToAccountID,
 			Amount:        arg.Amount,
@@ -33,7 +35,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		fromEntry, err := q.CreateEntry(ctx, sqlc.CreateEntryParams{
+		result.FromEntry, err = q.CreateEntry(ctx, sqlc.CreateEntryParams{
 			AccountID: arg.FromAccountID,
 			Amount:    "-" + arg.Amount,
 		})
@@ -41,7 +43,7 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		toEntry, err := q.CreateEntry(ctx, sqlc.CreateEntryParams{
+		result.ToEntry, err = q.CreateEntry(ctx, sqlc.CreateEntryParams{
 			AccountID: arg.ToAccountID,
 			Amount:    arg.Amount,
 		})
@@ -49,32 +51,44 @@ func (store *Store) TransferTx(ctx context.Context, arg TransferTxParams) (Trans
 			return err
 		}
 
-		updatedAccount1, err := q.AddAccountBalance(ctx, sqlc.AddAccountBalanceParams{
-			Amount: "-" + arg.Amount,
+		fromAccountParams := sqlc.AddAccountBalanceParams{
 			ID:     arg.FromAccountID,
-		})
-		if err != nil {
-			return err
+			Amount: "-" + arg.Amount,
 		}
-
-		updatedAccount2, err := q.AddAccountBalance(ctx, sqlc.AddAccountBalanceParams{
-			Amount: arg.Amount,
+		toAccountParams := sqlc.AddAccountBalanceParams{
 			ID:     arg.ToAccountID,
-		})
-		if err != nil {
-			return err
+			Amount: arg.Amount,
 		}
-
-		result = TransferTxResult{
-			Transfer:    transfer,
-			FromEntry:   fromEntry,
-			ToEntry:     toEntry,
-			FromAccount: updatedAccount1,
-			ToAccount:   updatedAccount2,
+		if arg.FromAccountID < arg.ToAccountID {
+			result.FromAccount, result.ToAccount, err = addMoney(ctx, q, fromAccountParams, toAccountParams)
+			if err != nil {
+				return err
+			}
+		} else {
+			result.ToAccount, result.FromAccount, err = addMoney(ctx, q, toAccountParams, fromAccountParams)
+			if err != nil {
+				return err
+			}
 		}
 
 		return nil
 	})
 
 	return result, err
+}
+
+func addMoney(
+	ctx context.Context,
+	q *sqlc.Queries,
+	addAccountBalanceParams1,
+	addAccountBalanceParams2 sqlc.AddAccountBalanceParams,
+) (account1, account2 sqlc.Account, err error) {
+	account1, err = q.AddAccountBalance(ctx, addAccountBalanceParams1)
+	if err != nil {
+		return account1, account2, err
+	}
+
+	account2, err = q.AddAccountBalance(ctx, addAccountBalanceParams2)
+
+	return account1, account2, err
 }

@@ -136,3 +136,65 @@ func TestTransferTx(t *testing.T) {
 	require.Equal(t, oldBalance1-float64(n)*amountF, newBalance1)
 	require.Equal(t, oldBalance2+float64(n)*amountF, newBalance2)
 }
+
+func TestTransferTxDeadlock(t *testing.T) {
+	store := tx.NewStore(testDB)
+
+	account1 := devutils.RandomNewAccount()
+	account2 := devutils.RandomNewAccount()
+
+	createdAccount1, err := testQueries.CreateAccount(context.Background(), account1)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, createdAccount1)
+
+	createdAccount2, err := testQueries.CreateAccount(context.Background(), account2)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, createdAccount2)
+
+	// number of transfers
+	n := 10
+	// amount to be transferred
+	amount := "10.50"
+
+	errs := make(chan error)
+
+	// goroutines for transfers
+	for i := 0; i < n; i++ {
+		fromAccountID := createdAccount1.ID
+		toAccountID := createdAccount2.ID
+
+		if i%2 == 0 {
+			fromAccountID = createdAccount2.ID
+			toAccountID = createdAccount1.ID
+		}
+
+		go func() {
+			_, err := store.TransferTx(context.Background(), tx.TransferTxParams{
+				FromAccountID: fromAccountID,
+				ToAccountID:   toAccountID,
+				Amount:        amount,
+			})
+
+			errs <- err
+		}()
+	}
+
+	// checking results from goroutines
+	for i := 0; i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+
+	}
+
+	// get updated accounts
+	updatedAccount1, err := store.GetAccount(context.Background(), createdAccount1.ID)
+	require.NoError(t, err)
+	updatedAccount2, err := store.GetAccount(context.Background(), createdAccount2.ID)
+	require.NoError(t, err)
+
+	// verify final balances
+	require.Equal(t, createdAccount1.Balance, updatedAccount1.Balance)
+	require.Equal(t, createdAccount2.Balance, updatedAccount2.Balance)
+}
