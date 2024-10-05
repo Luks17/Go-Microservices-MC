@@ -14,4 +14,7 @@ test:
 clean-test-cache:
 	go clean -testcache
 
-.PHONY: migrate-up migrate-down sqlc test clean-test-cache
+server:
+	go run main.go
+
+.PHONY: migrate-up migrate-down sqlc test clean-test-cache server
