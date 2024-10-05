@@ -1,4 +1,4 @@
-package tx_test
+package repository_test
 
 import (
 	"context"
@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/Luks17/Go-Microservices-MC/db/devutils"
-	"github.com/Luks17/Go-Microservices-MC/db/tx"
+	"github.com/Luks17/Go-Microservices-MC/db/repository"
 	"github.com/stretchr/testify/require"
 )
 
 func TestTransferTx(t *testing.T) {
-	store := tx.NewStore(testDB)
+	store := repository.NewStore(testDB)
 
 	account1 := devutils.RandomNewAccount()
 	account2 := devutils.RandomNewAccount()
@@ -37,12 +37,12 @@ func TestTransferTx(t *testing.T) {
 	amount := "10.50"
 
 	errs := make(chan error)
-	results := make(chan tx.TransferTxResult)
+	results := make(chan repository.TransferTxResult)
 
 	// goroutines for transfers
 	for i := 0; i < n; i++ {
 		go func() {
-			result, err := store.TransferTx(context.Background(), tx.TransferTxParams{
+			result, err := store.TransferTx(context.Background(), repository.TransferTxParams{
 				FromAccountID: createdAccount1.ID,
 				ToAccountID:   createdAccount2.ID,
 				Amount:        amount,
@@ -138,7 +138,7 @@ func TestTransferTx(t *testing.T) {
 }
 
 func TestTransferTxDeadlock(t *testing.T) {
-	store := tx.NewStore(testDB)
+	store := repository.NewStore(testDB)
 
 	account1 := devutils.RandomNewAccount()
 	account2 := devutils.RandomNewAccount()
@@ -171,7 +171,7 @@ func TestTransferTxDeadlock(t *testing.T) {
 		}
 
 		go func() {
-			_, err := store.TransferTx(context.Background(), tx.TransferTxParams{
+			_, err := store.TransferTx(context.Background(), repository.TransferTxParams{
 				FromAccountID: fromAccountID,
 				ToAccountID:   toAccountID,
 				Amount:        amount,

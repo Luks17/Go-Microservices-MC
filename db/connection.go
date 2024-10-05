@@ -3,11 +3,11 @@ package db
 import (
 	"database/sql"
 
-	"github.com/Luks17/Go-Microservices-MC/db/tx"
+	"github.com/Luks17/Go-Microservices-MC/db/repository"
 )
 
-var DBStore *tx.Store
+var DBStore *repository.Store
 
 func InitStore(db *sql.DB) {
-	DBStore = tx.NewStore(db)
+	DBStore = repository.NewStore(db)
 }
