@@ -8,6 +8,8 @@ import (
 func InitServer(address string) error {
 	server := gin.Default()
 
+	server.GET("/accounts", handlers.ListAccounts)
+	server.GET("/accounts/:id", handlers.GetAccount)
 	server.POST("/accounts", handlers.CreateAccount)
 
 	err := server.Run(address)
