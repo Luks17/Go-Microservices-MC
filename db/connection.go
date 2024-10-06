@@ -6,7 +6,7 @@ import (
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
 )
 
-var DBStore *repository.Store
+var DBStore *repository.SQLStore
 
 func InitStore(db *sql.DB) {
 	DBStore = repository.NewStore(db)

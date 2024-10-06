@@ -17,4 +17,7 @@ clean-test-cache:
 server:
 	go run main.go
 
-.PHONY: migrate-up migrate-down sqlc test clean-test-cache server
+mock:
+	mockgen -package mockdb -destination db/mock/store.go github.com/Luks17/Go-Microservices-MC/db/repository Store
+
+.PHONY: migrate-up migrate-down sqlc test clean-test-cache server mock

@@ -8,6 +8,7 @@ require (
 	github.com/brianvoe/gofakeit/v7 v7.0.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/spf13/viper v1.19.0
+	go.uber.org/mock v0.4.0
 )
 
 require (
