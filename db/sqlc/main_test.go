@@ -7,17 +7,18 @@ import (
 	"testing"
 
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
-)
-
-const (
-	dbDriver = "postgres"
-	dbSource = "postgresql://root:123456@0.0.0.0:5432/bank?sslmode=disable"
+	"github.com/Luks17/Go-Microservices-MC/util"
 )
 
 var testQueries *sqlc.Queries
 
 func TestMain(m *testing.M) {
-	conn, err := sql.Open(dbDriver, dbSource)
+	config, err := util.LoadConfig("../..")
+	if err != nil {
+		log.Fatal("Could not load config: ", err)
+	}
+
+	conn, err := sql.Open(config.DBDriver, util.GetDBConnectionURI(&config))
 	if err != nil {
 		log.Fatal("Cannot connect to db: ", err)
 	}
