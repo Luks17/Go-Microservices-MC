@@ -5,16 +5,16 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/Luks17/Go-Microservices-MC/db/devutils"
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
+	"github.com/Luks17/Go-Microservices-MC/devutils"
 	"github.com/stretchr/testify/require"
 )
 
 func TestTransferTx(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	account1 := devutils.RandomNewAccount()
-	account2 := devutils.RandomNewAccount()
+	account1 := devutils.RandomCreateAccount()
+	account2 := devutils.RandomCreateAccount()
 
 	createdAccount1, err := testQueries.CreateAccount(context.Background(), account1)
 
@@ -140,8 +140,8 @@ func TestTransferTx(t *testing.T) {
 func TestTransferTxDeadlock(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	account1 := devutils.RandomNewAccount()
-	account2 := devutils.RandomNewAccount()
+	account1 := devutils.RandomCreateAccount()
+	account2 := devutils.RandomCreateAccount()
 
 	createdAccount1, err := testQueries.CreateAccount(context.Background(), account1)
 

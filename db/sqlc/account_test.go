@@ -7,14 +7,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Luks17/Go-Microservices-MC/db/devutils"
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/devutils"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateAccount(t *testing.T) {
-	arg := devutils.RandomNewAccount()
+	arg := devutils.RandomCreateAccount()
 
 	account, err := testQueries.CreateAccount(context.Background(), arg)
 
@@ -30,7 +30,7 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestGetAccount(t *testing.T) {
-	arg := devutils.RandomNewAccount()
+	arg := devutils.RandomCreateAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), arg)
 
@@ -50,7 +50,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestUpdateAccount(t *testing.T) {
-	createArg := devutils.RandomNewAccount()
+	createArg := devutils.RandomCreateAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -75,7 +75,7 @@ func TestUpdateAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	createArg := devutils.RandomNewAccount()
+	createArg := devutils.RandomCreateAccount()
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -94,7 +94,7 @@ func TestDeleteAccount(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createArg := devutils.RandomNewAccount()
+		createArg := devutils.RandomCreateAccount()
 
 		createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
