@@ -9,7 +9,7 @@ import (
 )
 
 func NewMockServer(store repository.Store) (*gin.Engine, *httptest.ResponseRecorder) {
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.TestMode)
 	server := gin.New()
 	server.Use(gin.Recovery())
 	api.LoadRouter(server)
