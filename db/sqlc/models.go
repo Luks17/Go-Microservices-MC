@@ -53,6 +53,16 @@ func (ns NullCurrencies) Value() (driver.Value, error) {
 	return string(ns.Currencies), nil
 }
 
+func (e Currencies) Valid() bool {
+	switch e {
+	case CurrenciesUSD,
+		CurrenciesEUR,
+		CurrenciesBRL:
+		return true
+	}
+	return false
+}
+
 type Account struct {
 	ID        int64      `json:"id"`
 	Owner     string     `json:"owner"`

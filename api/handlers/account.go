@@ -61,7 +61,7 @@ func GetAccount(ctx *gin.Context) {
 
 type createAccountRequest struct {
 	Owner    string          `json:"owner" binding:"required"`
-	Currency sqlc.Currencies `json:"currency" binding:"required,oneof=USD EUR BRL"`
+	Currency sqlc.Currencies `json:"currency" binding:"required,currency"`
 }
 
 func CreateAccount(ctx *gin.Context) {

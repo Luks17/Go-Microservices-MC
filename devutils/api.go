@@ -12,6 +12,8 @@ func NewMockServer(store repository.Store) (*gin.Engine, *httptest.ResponseRecor
 	gin.SetMode(gin.TestMode)
 	server := gin.New()
 	server.Use(gin.Recovery())
+
+	api.LoadValidators()
 	api.LoadRouter(server)
 
 	recorder := httptest.NewRecorder()
