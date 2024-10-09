@@ -42,7 +42,7 @@ jobs:
         run: echo "${{ secrets.TEST_ENV }}" > app.env
 
       - name: Run migrations
-        run: make migrate-up
+        run: make migrate-up-all
 
       - name: Test
         run: make test
