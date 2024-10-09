@@ -5,6 +5,7 @@
 package sqlc
 
 import (
+	"database/sql"
 	"database/sql/driver"
 	"fmt"
 	"time"
@@ -85,4 +86,13 @@ type Transfer struct {
 	// cannot be negative
 	Amount    string    `json:"amount"`
 	CreatedAt time.Time `json:"created_at"`
+}
+
+type User struct {
+	Username              string       `json:"username"`
+	Password              string       `json:"password"`
+	FullName              string       `json:"full_name"`
+	Email                 string       `json:"email"`
+	PasswordLastChangedAt sql.NullTime `json:"password_last_changed_at"`
+	CreatedAt             time.Time    `json:"created_at"`
 }

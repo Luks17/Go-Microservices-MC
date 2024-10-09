@@ -13,29 +13,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestCreateAccount(t *testing.T) {
-	arg := devutils.RandomCreateAccount()
-
-	account, err := testQueries.CreateAccount(context.Background(), arg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, account)
-
-	require.Equal(t, arg.Owner, account.Owner)
-	require.Equal(t, arg.Balance, account.Balance)
-	require.Equal(t, arg.Currency, account.Currency)
-
-	require.NotZero(t, account.ID)
-	require.NotZero(t, account.CreatedAt)
-}
-
-func TestGetAccount(t *testing.T) {
-	arg := devutils.RandomCreateAccount()
+func TestCreateGetAccount(t *testing.T) {
+	arg := newAccountArg(t)
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, createdAccount)
+
+	require.Equal(t, arg.Owner, createdAccount.Owner)
+	require.Equal(t, arg.Balance, createdAccount.Balance)
+	require.Equal(t, arg.Currency, createdAccount.Currency)
+	require.NotZero(t, createdAccount.ID)
+	require.NotZero(t, createdAccount.CreatedAt)
 
 	retrievedAccount, err := testQueries.GetAccount(context.Background(), createdAccount.ID)
 
@@ -50,7 +40,7 @@ func TestGetAccount(t *testing.T) {
 }
 
 func TestUpdateAccount(t *testing.T) {
-	createArg := devutils.RandomCreateAccount()
+	createArg := newAccountArg(t)
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -75,7 +65,7 @@ func TestUpdateAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	createArg := devutils.RandomCreateAccount()
+	createArg := newAccountArg(t)
 
 	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -94,7 +84,7 @@ func TestDeleteAccount(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createArg := devutils.RandomCreateAccount()
+		createArg := newAccountArg(t)
 
 		createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
 
@@ -115,4 +105,15 @@ func TestListAccounts(t *testing.T) {
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
 	}
+}
+
+func newAccountArg(t *testing.T) sqlc.CreateAccountParams {
+	arg := devutils.RandomCreateUser()
+
+	user, err := testQueries.CreateUser(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
+	return devutils.RandomCreateAccount(user.Username)
 }

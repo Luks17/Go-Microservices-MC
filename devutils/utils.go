@@ -23,9 +23,18 @@ func RandomBalance() string {
 	return strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64)
 }
 
-func RandomCreateAccount() sqlc.CreateAccountParams {
+func RandomCreateUser() sqlc.CreateUserParams {
+	return sqlc.CreateUserParams{
+		Username: gofakeit.Username(),
+		Password: gofakeit.Password(true, true, true, false, false, 12),
+		FullName: gofakeit.Name(),
+		Email:    gofakeit.Email(),
+	}
+}
+
+func RandomCreateAccount(username string) sqlc.CreateAccountParams {
 	return sqlc.CreateAccountParams{
-		Owner:    gofakeit.Name(),
+		Owner:    username,
 		Balance:  RandomBalance(),
 		Currency: RandomCurrency(),
 	}
@@ -34,7 +43,7 @@ func RandomCreateAccount() sqlc.CreateAccountParams {
 func RandomNewAccount() sqlc.Account {
 	return sqlc.Account{
 		ID:        gofakeit.Int64(),
-		Owner:     gofakeit.Name(),
+		Owner:     gofakeit.Username(),
 		Balance:   RandomBalance(),
 		Currency:  RandomCurrency(),
 		CreatedAt: RandomTimeStamp(),
