@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Luks17/Go-Microservices-MC/api/handlers/errmap"
 	"github.com/Luks17/Go-Microservices-MC/db"
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
@@ -22,7 +23,7 @@ type transferRequest struct {
 func CreateTransfer(ctx *gin.Context) {
 	var req transferRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, errmap.ErrorResponse(err))
 		return
 	}
 
@@ -42,7 +43,7 @@ func CreateTransfer(ctx *gin.Context) {
 
 	result, err := db.DBStore.TransferTx(ctx, arg)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errmap.ErrorResponse(err))
 		return
 	}
 
@@ -53,16 +54,16 @@ func validAccount(ctx *gin.Context, accountID int64, currency sqlc.Currencies) b
 	account, err := db.DBStore.GetAccount(ctx, accountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			ctx.JSON(http.StatusNotFound, errmap.ErrorResponse(err))
 			return false
 		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusInternalServerError, errmap.ErrorResponse(err))
 		return false
 	}
 
 	if account.Currency != currency {
 		err := fmt.Errorf("account [%d] currency mismatch: %s vs %s", accountID, account.Currency, currency)
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		ctx.JSON(http.StatusBadRequest, errmap.ErrorResponse(err))
 		return false
 	}
 
