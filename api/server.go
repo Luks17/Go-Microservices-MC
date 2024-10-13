@@ -20,6 +20,8 @@ func LoadRouter(server *gin.Engine) {
 	server.POST("/accounts", handlers.CreateAccount)
 
 	server.POST("/transfers", handlers.CreateTransfer)
+
+	server.POST("/users", handlers.CreateUser)
 }
 
 func InitServer(address string) error {
