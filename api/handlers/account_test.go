@@ -13,12 +13,13 @@ import (
 	mockdb "github.com/Luks17/Go-Microservices-MC/db/mock"
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 	"github.com/Luks17/Go-Microservices-MC/devutils"
+	"github.com/Luks17/Go-Microservices-MC/devutils/devmodels"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )
 
 func TestGetAccountAPI(t *testing.T) {
-	account := devutils.RandomMockAccount()
+	account := devmodels.RandomMockAccount()
 
 	testCases := []struct {
 		name          string

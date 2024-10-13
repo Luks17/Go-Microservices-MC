@@ -6,15 +6,15 @@ import (
 	"testing"
 
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
-	"github.com/Luks17/Go-Microservices-MC/devutils"
+	"github.com/Luks17/Go-Microservices-MC/devutils/devmodels"
 	"github.com/stretchr/testify/require"
 )
 
 func TestTransferTx(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	createdAccount1 := devutils.CreateNewRandomAccount(t, testQueries)
-	createdAccount2 := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount1 := devmodels.CreateNewRandomAccount(t, testQueries)
+	createdAccount2 := devmodels.CreateNewRandomAccount(t, testQueries)
 
 	oldBalance1, err := strconv.ParseFloat(createdAccount1.Balance, 64)
 	require.NoError(t, err)
@@ -130,8 +130,8 @@ func TestTransferTx(t *testing.T) {
 func TestTransferTxDeadlock(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	createdAccount1 := devutils.CreateNewRandomAccount(t, testQueries)
-	createdAccount2 := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount1 := devmodels.CreateNewRandomAccount(t, testQueries)
+	createdAccount2 := devmodels.CreateNewRandomAccount(t, testQueries)
 
 	// number of transfers
 	n := 10

@@ -8,15 +8,15 @@ import (
 	"time"
 
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
-	"github.com/Luks17/Go-Microservices-MC/devutils"
+	"github.com/Luks17/Go-Microservices-MC/devutils/devmodels"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateGetAccount(t *testing.T) {
-	user := devutils.CreateNewRandomUser(t, testQueries)
+	user := devmodels.CreateNewRandomUser(t, testQueries)
 
-	arg := devutils.RandomAccountParams(user.Username)
+	arg := devmodels.RandomAccountParams(user.Username)
 	createdAccount, err := testQueries.CreateAccount(context.Background(), arg)
 
 	require.NoError(t, err)
@@ -41,7 +41,7 @@ func TestCreateGetAccount(t *testing.T) {
 }
 
 func TestUpdateAccount(t *testing.T) {
-	createdAccount := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount := devmodels.CreateNewRandomAccount(t, testQueries)
 
 	updateArg := sqlc.UpdateAccountParams{
 		ID:      createdAccount.ID,
@@ -61,7 +61,7 @@ func TestUpdateAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	createdAccount := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount := devmodels.CreateNewRandomAccount(t, testQueries)
 
 	err := testQueries.DeleteAccount(context.Background(), createdAccount.ID)
 
@@ -75,7 +75,7 @@ func TestDeleteAccount(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		devutils.CreateNewRandomAccount(t, testQueries)
+		devmodels.CreateNewRandomAccount(t, testQueries)
 	}
 
 	arg := sqlc.ListAccountsParams{

@@ -7,13 +7,14 @@ import (
 	"time"
 
 	"github.com/Luks17/Go-Microservices-MC/devutils"
+	"github.com/Luks17/Go-Microservices-MC/devutils/devmodels"
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateGetUser(t *testing.T) {
 	password := devutils.RandomPassword(t)
 
-	arg := devutils.RandomUserParams(password)
+	arg := devmodels.RandomUserParams(password)
 	createdUser, err := testQueries.CreateUser(context.Background(), arg)
 
 	require.NoError(t, err)
