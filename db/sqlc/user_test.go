@@ -11,8 +11,9 @@ import (
 )
 
 func TestCreateGetUser(t *testing.T) {
-	arg := devutils.RandomCreateUser()
+	password := devutils.RandomPassword(t)
 
+	arg := devutils.RandomUserParams(password)
 	createdUser, err := testQueries.CreateUser(context.Background(), arg)
 
 	require.NoError(t, err)

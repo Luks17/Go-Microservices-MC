@@ -2,11 +2,13 @@ package devutils
 
 import (
 	"strconv"
+	"testing"
 	"time"
 
+	"github.com/Luks17/Go-Microservices-MC/crypt"
 	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 	"github.com/brianvoe/gofakeit/v7"
-	_ "github.com/lib/pq"
+	"github.com/stretchr/testify/require"
 )
 
 func RandomCurrency() sqlc.Currencies {
@@ -23,29 +25,11 @@ func RandomBalance() string {
 	return strconv.FormatFloat(gofakeit.Price(0, 10000), 'f', 2, 64)
 }
 
-func RandomCreateUser() sqlc.CreateUserParams {
-	return sqlc.CreateUserParams{
-		Username: gofakeit.Username(),
-		Password: gofakeit.Password(true, true, true, false, false, 12),
-		FullName: gofakeit.Name(),
-		Email:    gofakeit.Email(),
-	}
-}
+func RandomPassword(t *testing.T) string {
+	password := gofakeit.Password(true, true, true, false, false, 12)
+	hashedPassword, err := crypt.HashPassword(password)
 
-func RandomCreateAccount(username string) sqlc.CreateAccountParams {
-	return sqlc.CreateAccountParams{
-		Owner:    username,
-		Balance:  RandomBalance(),
-		Currency: RandomCurrency(),
-	}
-}
+	require.NoError(t, err)
 
-func RandomNewAccount() sqlc.Account {
-	return sqlc.Account{
-		ID:        gofakeit.Int64(),
-		Owner:     gofakeit.Username(),
-		Balance:   RandomBalance(),
-		Currency:  RandomCurrency(),
-		CreatedAt: RandomTimeStamp(),
-	}
+	return hashedPassword
 }

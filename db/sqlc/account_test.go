@@ -14,8 +14,9 @@ import (
 )
 
 func TestCreateGetAccount(t *testing.T) {
-	arg := newAccountArg(t)
+	user := devutils.CreateNewRandomUser(t, testQueries)
 
+	arg := devutils.RandomAccountParams(user.Username)
 	createdAccount, err := testQueries.CreateAccount(context.Background(), arg)
 
 	require.NoError(t, err)
@@ -40,12 +41,7 @@ func TestCreateGetAccount(t *testing.T) {
 }
 
 func TestUpdateAccount(t *testing.T) {
-	createArg := newAccountArg(t)
-
-	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, createdAccount)
+	createdAccount := devutils.CreateNewRandomAccount(t, testQueries)
 
 	updateArg := sqlc.UpdateAccountParams{
 		ID:      createdAccount.ID,
@@ -65,14 +61,9 @@ func TestUpdateAccount(t *testing.T) {
 }
 
 func TestDeleteAccount(t *testing.T) {
-	createArg := newAccountArg(t)
+	createdAccount := devutils.CreateNewRandomAccount(t, testQueries)
 
-	createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, createdAccount)
-
-	err = testQueries.DeleteAccount(context.Background(), createdAccount.ID)
+	err := testQueries.DeleteAccount(context.Background(), createdAccount.ID)
 
 	require.NoError(t, err)
 
@@ -84,12 +75,7 @@ func TestDeleteAccount(t *testing.T) {
 
 func TestListAccounts(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		createArg := newAccountArg(t)
-
-		createdAccount, err := testQueries.CreateAccount(context.Background(), createArg)
-
-		require.NoError(t, err)
-		require.NotEmpty(t, createdAccount)
+		devutils.CreateNewRandomAccount(t, testQueries)
 	}
 
 	arg := sqlc.ListAccountsParams{
@@ -105,15 +91,4 @@ func TestListAccounts(t *testing.T) {
 	for _, account := range accounts {
 		require.NotEmpty(t, account)
 	}
-}
-
-func newAccountArg(t *testing.T) sqlc.CreateAccountParams {
-	arg := devutils.RandomCreateUser()
-
-	user, err := testQueries.CreateUser(context.Background(), arg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, user)
-
-	return devutils.RandomCreateAccount(user.Username)
 }

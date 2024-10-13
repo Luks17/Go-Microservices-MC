@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
 	"github.com/Luks17/Go-Microservices-MC/devutils"
 	"github.com/stretchr/testify/require"
 )
@@ -14,8 +13,8 @@ import (
 func TestTransferTx(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	createdAccount1 := newAccount(t)
-	createdAccount2 := newAccount(t)
+	createdAccount1 := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount2 := devutils.CreateNewRandomAccount(t, testQueries)
 
 	oldBalance1, err := strconv.ParseFloat(createdAccount1.Balance, 64)
 	require.NoError(t, err)
@@ -131,8 +130,8 @@ func TestTransferTx(t *testing.T) {
 func TestTransferTxDeadlock(t *testing.T) {
 	store := repository.NewStore(testDB)
 
-	createdAccount1 := newAccount(t)
-	createdAccount2 := newAccount(t)
+	createdAccount1 := devutils.CreateNewRandomAccount(t, testQueries)
+	createdAccount2 := devutils.CreateNewRandomAccount(t, testQueries)
 
 	// number of transfers
 	n := 10
@@ -178,21 +177,4 @@ func TestTransferTxDeadlock(t *testing.T) {
 	// verify final balances
 	require.Equal(t, createdAccount1.Balance, updatedAccount1.Balance)
 	require.Equal(t, createdAccount2.Balance, updatedAccount2.Balance)
-}
-
-func newAccount(t *testing.T) sqlc.Account {
-	userArg := devutils.RandomCreateUser()
-
-	user, err := testQueries.CreateUser(context.Background(), userArg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, user)
-
-	accountArg := devutils.RandomCreateAccount(user.Username)
-	account, err := testQueries.CreateAccount(context.Background(), accountArg)
-
-	require.NoError(t, err)
-	require.NotEmpty(t, account)
-
-	return account
 }

@@ -18,7 +18,7 @@ import (
 )
 
 func TestGetAccountAPI(t *testing.T) {
-	account := devutils.RandomNewAccount()
+	account := devutils.RandomMockAccount()
 
 	testCases := []struct {
 		name          string
