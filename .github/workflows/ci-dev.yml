@@ -2,7 +2,7 @@ name: ci-test
 
 on:
   push:
-    branches: ["main"]
+    branches: ["develop"]
 
 jobs:
   test:
@@ -37,6 +37,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
           WITH_V: true
           DEFAULT_BUMP: "patch"
+          PRERELEASE: true
+          PRERELEASE_SUFFIX: "dev"
 
       - name: Set up Go
         uses: actions/setup-go@v4
