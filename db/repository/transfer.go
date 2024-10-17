@@ -3,7 +3,7 @@ package repository
 import (
 	"context"
 
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 )
 
 type TransferTxParams struct {

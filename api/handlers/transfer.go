@@ -9,7 +9,7 @@ import (
 	"github.com/Luks17/Go-Microservices-MC/api/handlers/errmap"
 	"github.com/Luks17/Go-Microservices-MC/db"
 	"github.com/Luks17/Go-Microservices-MC/db/repository"
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/gin-gonic/gin"
 )
 

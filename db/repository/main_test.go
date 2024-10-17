@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/Luks17/Go-Microservices-MC/util"
 )
 

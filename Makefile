@@ -11,7 +11,7 @@ migrate-down:
 	migrate -path db/migrations -database "postgresql://root:123456@0.0.0.0:5432/bank?sslmode=disable" -verbose down 1
 
 sqlc:
-	find db/sqlc -type f ! -name '*_test.go' -delete
+	find db/repository/sqlc -type f ! -name '*_test.go' -delete
 	sqlc generate
 
 test:

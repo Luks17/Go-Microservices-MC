@@ -1,7 +1,7 @@
 package validators
 
 import (
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/go-playground/validator/v10"
 )
 

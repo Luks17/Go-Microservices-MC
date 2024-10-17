@@ -11,7 +11,7 @@ import (
 	"testing"
 
 	mockdb "github.com/Luks17/Go-Microservices-MC/db/mock"
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/Luks17/Go-Microservices-MC/devutils"
 	"github.com/Luks17/Go-Microservices-MC/devutils/devmodels"
 	"github.com/stretchr/testify/require"

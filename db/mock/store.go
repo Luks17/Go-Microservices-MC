@@ -14,7 +14,7 @@ import (
 	reflect "reflect"
 
 	repository "github.com/Luks17/Go-Microservices-MC/db/repository"
-	sqlc "github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	sqlc "github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	gomock "go.uber.org/mock/gomock"
 )
 

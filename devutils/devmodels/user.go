@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/Luks17/Go-Microservices-MC/devutils"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"

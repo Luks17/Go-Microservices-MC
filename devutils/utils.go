@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Luks17/Go-Microservices-MC/crypt"
-	"github.com/Luks17/Go-Microservices-MC/db/sqlc"
+	"github.com/Luks17/Go-Microservices-MC/db/repository/sqlc"
 	"github.com/brianvoe/gofakeit/v7"
 	"github.com/stretchr/testify/require"
 )
